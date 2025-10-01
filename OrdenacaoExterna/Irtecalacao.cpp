@@ -1,36 +1,82 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include <algorithm>
+#include <string>
 
 using namespace std;
-using TipoDado = char;  //* Declarando alias para facilitar a troca do tipo de dado
+
+//todo Função para contruir n fitas
+void CriarFitas(string base, int qtd){
+    for (int i = 1; i <= qtd; i++)
+    {
+        ofstream arq;
+        arq.open(base + to_string(i) + ".txt");
+        if (!arq.is_open())
+        {
+            cout << "Error ao abrir o arquivo!" << endl;
+        }
+        arq.close();
+    }
+}
+
+//todo Função para alocar valores
+void addInFita(string valor, string base, int i) {
+    ofstream arq;
+        arq.open(base + to_string(i) + ".txt", ios::app);
+        if (!arq.is_open())
+        {
+            cout << "Error ao abrir o arquivo!" << endl;
+        }
+        arq << valor << endl;
+        arq.close();
+}
 
 int main()
 {
-    int tamM, qtdFitas;
-    vector<int> dados_entrada;
-    TipoDado valor;
+    int tmemoria, fitas, i, j=1;
+    char c;
+    string base = "fita";
+    vector<char> mem;
 
-    cout << "Digite o tamanho da memoria: ";
-    cin >> tamM;
+    //todo Leitura do arquivo inicial
+    fstream arq("dados.in", ios::in);
+    arq >> tmemoria >> fitas;
+    arq.ignore();
 
-    cout << "Digite a quantidade de fitas: ";
-    cin >> qtdFitas;
+    //todo Criando as n fitas
+    CriarFitas(base, fitas);
 
-    //todo ENTRADA DE DADOS DE TAMANHO DESCONHECIDO - FASE 1
-    cout << "Digite o conjunto de dados: (Precione CTRL + Z para encerrar a leitura)";
-    while (cin >> valor)
+    cout << "Fitas: " << fitas << endl;
+    cout << "T. Memoria: " << tmemoria << endl;
+
+
+    //todo Motangem dos blocos iniciais ordenados
+    while (!arq.eof())
     {
-        dados_entrada.push_back(valor); 
+        i = 0;
+        while (i < tmemoria&& !arq.eof())
+        {
+            arq.get(c);
+            mem.push_back(c);
+            i++;
+            arq >> ws;
+        }
+        sort(mem.begin(), mem.end());
+        cout << string(mem.begin(), mem.end()) << endl;
+        
+        //todo Alocando valores nas fitas inicias
+
+        addInFita(string(mem.begin(), mem.end()),base,j);
+        j++;
+        if (j > fitas/2)
+        {
+            j=1;
+        }
+        
+        mem.clear();
     }
-    
-    //todo MONTAGEM DOS BLOCOS INICIAIS ORDENADOS - FASE 2
-
-    vector<vector<TipoDado>> fitas(qtdFitas);                   //* Criando um vetor de vetores para armazenar as fitas, que são outros vetores
-
-    int fitas_de_entrada = qtdFitas/2;                          //* Declarando as primeiras fitas que vão ser utilizadas
-    int fita_destino_atual = 0;                                 //* Declarando fita inicial
-
-    
+    arq.close();
 
     return 0;
-}
+}   
