@@ -10,6 +10,7 @@ int main() {
     
     do
     {
+        cout << "---------- MENU ------------" << endl;
         cout << "1 - Cadastrar Pessoa" << endl;
         cout << "2 - Listar Pessoas" << endl;
         cout << "0 - Encerrar" << endl;
@@ -63,8 +64,9 @@ int main() {
                 return 1;
             }
 
-            while (getline(arq, nome) && (arq >> idade) && (arq >> altura))
+            while (getline(arq, nome) && (arq >> altura) && (arq >> idade))
             {
+                cout << "-------------------------" << endl;
                 cout << nome << endl;
                 cout << altura << " m" << endl;
                 cout << idade << " anos" << endl;
